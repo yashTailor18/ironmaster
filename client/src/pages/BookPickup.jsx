@@ -46,7 +46,7 @@ function BookPickup() {
 
       // API CALL
       const response = await axios.post(
-        "http://localhost:5000/api/bookings/create",
+        "https://ironmaster-7qg4.vercel.app/api/bookings/create",
         formData
       );
 
