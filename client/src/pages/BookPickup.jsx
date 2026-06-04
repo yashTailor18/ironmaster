@@ -14,7 +14,8 @@ function BookPickup() {
   });
 
   // SUCCESS MESSAGE STATE
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+const [bookingSuccess, setBookingSuccess] = useState(false);
+const [orderId, setOrderId] = useState("");
 
   // HANDLE INPUT CHANGE
   const handleChange = (e) => {
@@ -46,7 +47,7 @@ function BookPickup() {
 
       // API CALL
       const response = await axios.post(
-        "https://ironmaster-7qg4.vercel.app/api/bookings/create",
+        "http://localhost:5000/api/bookings/create",
         formData
       );
 
@@ -55,7 +56,9 @@ function BookPickup() {
       // SUCCESS MESSAGE
       setBookingSuccess(true);
 
-      alert(response.data.message);
+setOrderId(
+  response.data.booking.orderId
+);
 
       // CLEAR FORM
       setFormData({
@@ -80,8 +83,7 @@ function BookPickup() {
   return (
     <div className="min-h-screen bg-black text-white px-6 md:px-20 py-24">
 
-      {/* Heading */}
-      <div className="text-center mb-20">
+         <div className="text-center mb-20">
 
         <p className="text-gray-500 uppercase tracking-[6px] mb-5">
           Book Pickup
@@ -96,17 +98,51 @@ function BookPickup() {
         </p>
 
       </div>
-
+      
       {/* SUCCESS MESSAGE */}
-      {
-        bookingSuccess && (
-          <div className="bg-green-500 text-white px-6 py-4 rounded-2xl mb-10 text-center max-w-2xl mx-auto font-semibold">
+      {/* SUCCESS POPUP */}
+{
+  bookingSuccess && (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
 
-            Your Booking Has Been Confirmed Successfully 🚀
+      <div className="bg-[#111111] border border-gray-700 rounded-3xl p-10 max-w-md w-full text-center">
 
-          </div>
-        )
-      }
+        <div className="text-6xl mb-5">
+          ✅
+        </div>
+
+        <h2 className="text-3xl font-bold mb-4">
+          Booking Confirmed
+        </h2>
+
+        <p className="text-gray-400 mb-6">
+          Your pickup request has been submitted successfully.
+        </p>
+
+        <div className="bg-black border border-gray-700 rounded-2xl p-4 mb-6">
+
+          <p className="text-gray-400 text-sm">
+            Order ID
+          </p>
+
+          <h3 className="text-xl font-bold">
+            {orderId}
+          </h3>
+
+        </div>
+
+        <button
+          onClick={() => setBookingSuccess(false)}
+          className="w-full bg-white text-black py-3 rounded-2xl font-bold"
+        >
+          Close
+        </button>
+
+      </div>
+
+    </div>
+  )
+}
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -186,13 +222,17 @@ function BookPickup() {
 
             {/* DATE */}
             <input
-              type="date"
-              name="pickupDate"
-              value={formData.pickupDate}
-              onChange={handleChange}
-              className="bg-black border border-gray-700 rounded-2xl px-5 py-4 outline-none focus:border-white"
-            />
-
+  type="date"
+  name="pickupDate"
+  value={formData.pickupDate}
+  onChange={handleChange}
+ onClick={(e) => {
+  if (e.target.showPicker) {
+    e.target.showPicker();
+  }
+}}
+  className="bg-black border border-gray-700 rounded-2xl px-5 py-4 outline-none focus:border-white cursor-pointer w-full"
+/>
           </div>
 
           {/* BUTTON */}

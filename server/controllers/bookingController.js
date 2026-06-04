@@ -1,13 +1,9 @@
 const Booking = require("../models/Booking");
-
 const transporter = require("../config/nodemailer");
-
 
 // CREATE BOOKING
 const createBooking = async (req, res) => {
-
   try {
-
     const {
       fullName,
       phone,
@@ -17,9 +13,7 @@ const createBooking = async (req, res) => {
       pickupDate,
     } = req.body;
 
-    // CREATE NEW BOOKING
     const newBooking = new Booking({
-
       fullName,
       phone,
       email,
@@ -27,33 +21,21 @@ const createBooking = async (req, res) => {
       service,
       pickupDate,
 
-      // GENERATE ORDER ID
       orderId:
         "IRON" +
-        Math.floor(
-          100000 + Math.random() * 900000
-        ),
-
+        Math.floor(100000 + Math.random() * 900000),
     });
 
-    // SAVE TO DATABASE
     await newBooking.save();
 
-    // SEND EMAIL (SAFE MODE)
     try {
-
       await transporter.sendMail({
-
         from: process.env.EMAIL_USER,
-
         to: email,
-
         subject: "IronMaster Booking Confirmation 🚀",
 
         html: `
-
           <div style="font-family: Arial; padding: 20px;">
-
             <h1 style="color: black;">
               Booking Confirmed ✅
             </h1>
@@ -85,24 +67,16 @@ const createBooking = async (req, res) => {
             <p>
               Thank you for choosing IronMaster 🚀
             </p>
-
           </div>
-
         `,
-
       });
 
       console.log("Email Sent Successfully ✅");
-
     } catch (emailError) {
-
       console.log("Email Sending Failed ❌");
-
       console.log(emailError.message);
-
     }
 
-    // SUCCESS RESPONSE
     res.status(201).json({
       success: true,
       message: "Booking Created Successfully 🚀",
@@ -110,7 +84,6 @@ const createBooking = async (req, res) => {
     });
 
   } catch (error) {
-
     console.log(error);
 
     res.status(500).json({
@@ -118,35 +91,123 @@ const createBooking = async (req, res) => {
       message: "Server Error",
       error: error.message,
     });
-
   }
-
 };
-
 
 // TRACK ORDER
 const trackOrder = async (req, res) => {
-
   try {
-
     const { orderId } = req.params;
 
-    // FIND BOOKING
     const booking = await Booking.findOne({
       orderId,
     });
 
-    // ORDER NOT FOUND
     if (!booking) {
-
       return res.status(404).json({
         success: false,
         message: "Order Not Found",
       });
-
     }
 
-    // SUCCESS
+    res.status(200).json({
+      success: true,
+      booking,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+// GET ALL BOOKINGS
+const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      bookings,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// UPDATE STATUS
+const updateStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { orderStatus } = req.body;
+
+    const booking = await Booking.findByIdAndUpdate(
+      id,
+      { orderStatus },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking Not Found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      booking,
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+const assignDriver = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const {
+      driverName,
+      driverPhone,
+      bikeNumber,
+    } = req.body;
+
+    const booking = await Booking.findByIdAndUpdate(
+      id,
+      {
+        driverName,
+        driverPhone,
+        bikeNumber,
+      },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking Not Found",
+      });
+    }
+
     res.status(200).json({
       success: true,
       booking,
@@ -154,20 +215,17 @@ const trackOrder = async (req, res) => {
 
   } catch (error) {
 
-    console.log(error);
-
     res.status(500).json({
       success: false,
-      message: "Server Error",
-      error: error.message,
+      message: error.message,
     });
 
   }
-
 };
-
-
 module.exports = {
   createBooking,
   trackOrder,
+  getAllBookings,
+  updateStatus,
+  assignDriver,
 };

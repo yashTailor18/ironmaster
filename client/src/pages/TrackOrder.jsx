@@ -1,8 +1,34 @@
+import axios from "axios";
+
 import { useState } from "react";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 function TrackOrder() {
 
   const [orderId, setOrderId] = useState("");
+  const [booking, setBooking] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleTrackOrder = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await axios.get(
+        `${API_URL}/api/bookings/track/${orderId}`
+      );
+
+      setBooking(response.data.booking);
+
+    } catch (err) {
+      setBooking(null);
+      setError("Order Not Found");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -58,11 +84,12 @@ function TrackOrder() {
             {/* BUTTON */}
             <div>
 
-              <button className="w-full bg-white text-black py-5 rounded-2xl font-bold hover:bg-gray-300 transition duration-300 hover:scale-105">
-
-                Track Order
-
-              </button>
+              <button
+  onClick={handleTrackOrder}
+  className="w-full bg-white text-black py-5 rounded-2xl font-bold hover:bg-gray-300 transition duration-300 hover:scale-105"
+>
+  Track Order
+</button>
 
             </div>
 
@@ -71,6 +98,17 @@ function TrackOrder() {
         </div>
 
       </section>
+      {loading && (
+  <div className="text-center text-white mt-10 text-xl">
+    Loading...
+  </div>
+)}
+
+{error && (
+  <div className="text-center text-red-500 mt-10 text-xl">
+    {error}
+  </div>
+)}
 
       {/* ORDER STATUS */}
       <section className="px-6 md:px-20 py-24">
@@ -169,7 +207,8 @@ function TrackOrder() {
       </section>
 
       {/* ORDER DETAILS */}
-      <section className="px-6 md:px-20 pb-24">
+    {booking && (
+    <section className="px-6 md:px-20 pb-24">
 
         <div className="max-w-5xl mx-auto bg-[#111111] border border-gray-800 rounded-[40px] p-12">
 
@@ -182,14 +221,14 @@ function TrackOrder() {
               </p>
 
               <h2 className="text-4xl font-black">
-                IRON12345
+                {booking?.orderId}
               </h2>
 
             </div>
 
             <div className="bg-green-500 text-black px-8 py-3 rounded-full font-bold w-fit">
-              In Progress
-            </div>
+  {booking?.orderStatus}
+</div>
 
           </div>
 
@@ -205,7 +244,7 @@ function TrackOrder() {
                 </p>
 
                 <h3 className="text-2xl font-bold">
-                  Yash Tailor
+                  {booking?.fullName}
                 </h3>
 
               </div>
@@ -217,7 +256,7 @@ function TrackOrder() {
                 </p>
 
                 <h3 className="text-2xl font-bold">
-                  Premium Laundry + Ironing
+                  {booking?.service}
                 </h3>
 
               </div>
@@ -233,7 +272,7 @@ function TrackOrder() {
                 </p>
 
                 <h3 className="text-2xl font-bold">
-                  20 May 2026
+                  {booking?.pickupDate}
                 </h3>
 
               </div>
@@ -255,8 +294,57 @@ function TrackOrder() {
           </div>
 
         </div>
+        {/* DRIVER DETAILS */}
+<div className="mt-12 border-t border-gray-800 pt-10">
+
+  <h2 className="text-3xl font-bold mb-8">
+    Driver Information
+  </h2>
+
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <div className="bg-black border border-gray-800 rounded-2xl p-6">
+
+      <p className="text-gray-500 mb-2">
+        Driver Name
+      </p>
+
+      <h3 className="text-xl font-bold">
+        {booking?.driverName || "Not Assigned Yet"}
+      </h3>
+
+    </div>
+
+    <div className="bg-black border border-gray-800 rounded-2xl p-6">
+
+      <p className="text-gray-500 mb-2">
+        Driver Phone
+      </p>
+
+      <h3 className="text-xl font-bold">
+        {booking?.driverPhone || "Not Assigned Yet"}
+      </h3>
+
+    </div>
+
+    <div className="bg-black border border-gray-800 rounded-2xl p-6">
+
+      <p className="text-gray-500 mb-2">
+        Bike Number
+      </p>
+
+      <h3 className="text-xl font-bold">
+        {booking?.bikeNumber || "Not Assigned Yet"}
+      </h3>
+
+    </div>
+
+  </div>
+
+</div>
 
       </section>
+      )}
 
     </div>
   );

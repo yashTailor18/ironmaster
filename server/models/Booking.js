@@ -31,14 +31,31 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     orderId: {
-  type: String,
-  unique: true,
-},
+      type: String,
+      unique: true,
+    },
 
     orderStatus: {
       type: String,
       default: "Pending",
+    },
+
+    // DRIVER DETAILS
+    driverName: {
+      type: String,
+      default: "",
+    },
+
+    driverPhone: {
+      type: String,
+      default: "",
+    },
+
+    bikeNumber: {
+      type: String,
+      default: "",
     },
   },
 
