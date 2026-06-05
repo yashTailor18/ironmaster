@@ -13,13 +13,13 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Login Page */}
+        {/* Login */}
         <Route
           path="/"
           element={<Login />}
         />
 
-        {/* Protected Dashboard */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -29,7 +29,7 @@ function App() {
           }
         />
 
-        {/* Protected Bookings */}
+        {/* Bookings */}
         <Route
           path="/bookings"
           element={
@@ -39,7 +39,7 @@ function App() {
           }
         />
 
-        {/* Protected Drivers */}
+        {/* Drivers */}
         <Route
           path="/drivers"
           element={
@@ -49,7 +49,7 @@ function App() {
           }
         />
 
-        {/* Protected Settings */}
+        {/* Settings */}
         <Route
           path="/settings"
           element={

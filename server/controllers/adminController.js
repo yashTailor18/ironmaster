@@ -42,7 +42,7 @@ const loginAdmin = async (req, res) => {
     const token = jwt.sign(
       { id: admin._id },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "15m" }
     );
 
     console.log("TOKEN GENERATED");

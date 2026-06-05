@@ -1,6 +1,10 @@
+const driverRoutes = require("./routes/driverRoutes");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dashboardRoutes = require(
+  "./routes/dashboardRoutes"
+);
 
 const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -16,7 +20,11 @@ app.use(express.json());
 // ROUTES
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use(
+  "/api/dashboard",
+  dashboardRoutes
+);
+app.use("/api/drivers", driverRoutes);
 // TEST ROUTE
 app.get("/", (req, res) => {
   res.send("IronMaster Backend Running 🚀");

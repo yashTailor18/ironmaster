@@ -1,5 +1,6 @@
 const Booking = require("../models/Booking");
 const transporter = require("../config/nodemailer");
+const Driver = require("../models/Driver");
 
 // CREATE BOOKING
 const createBooking = async (req, res) => {
@@ -130,7 +131,8 @@ const trackOrder = async (req, res) => {
 const getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
-      .sort({ createdAt: -1 });
+  .populate("driverId")
+  .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -158,6 +160,17 @@ const updateStatus = async (req, res) => {
       { orderStatus },
       { new: true }
     );
+    if (
+  orderStatus === "Delivered" &&
+  booking.driverId
+) {
+  await Driver.findByIdAndUpdate(
+    booking.driverId,
+    {
+      status: "Available",
+    }
+  );
+}
 
     if (!booking) {
       return res.status(404).json({
@@ -186,6 +199,7 @@ const assignDriver = async (req, res) => {
     const { id } = req.params;
 
     const {
+      driverId,
       driverName,
       driverPhone,
       bikeNumber,
@@ -194,6 +208,7 @@ const assignDriver = async (req, res) => {
     const booking = await Booking.findByIdAndUpdate(
       id,
       {
+        driverId,
         driverName,
         driverPhone,
         bikeNumber,
@@ -206,6 +221,15 @@ const assignDriver = async (req, res) => {
         success: false,
         message: "Booking Not Found",
       });
+    }
+
+    if (driverId) {
+      await Driver.findByIdAndUpdate(
+        driverId,
+        {
+          status: "Busy",
+        }
+      );
     }
 
     res.status(200).json({
