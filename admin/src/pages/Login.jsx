@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ironLogo from "../assets/iron.png";
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +32,7 @@ function Login() {
 
       alert("Login Successful 🚀");
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
 
     } catch (error) {
       alert(
