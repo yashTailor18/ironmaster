@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ironLogo from "../assets/iron.png";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://ironmaster-7qg4.vercel.app";
+
 function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -13,7 +15,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/admin/login",
+        `${API_BASE_URL}/api/admin/login`,
         {
           email: email.trim(),
           password,

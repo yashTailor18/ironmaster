@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_URL =
-  "http://localhost:5000/api/drivers";
+const API_URL = `${import.meta.env.VITE_API_URL || "https://ironmaster-7qg4.vercel.app"}/api/drivers`;
 
 export const getDrivers = async () => {
   const response = await axios.get(

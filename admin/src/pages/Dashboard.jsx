@@ -5,6 +5,8 @@ import AdminLayout from "../layouts/AdminLayout";
 import Navbar from "../components/Navbar";
 import StatCard from "../components/StatCard";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://ironmaster-7qg4.vercel.app";
+
 function Dashboard() {
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -19,7 +21,7 @@ function Dashboard() {
     const fetchStats = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/dashboard/stats"
+          `${API_BASE_URL}/api/dashboard/stats`
         );
 
         setStats(response.data.stats);

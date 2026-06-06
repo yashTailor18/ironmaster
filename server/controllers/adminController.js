@@ -37,11 +37,19 @@ const loginAdmin = async (req, res) => {
       });
     }
 
-    console.log("JWT SECRET:", process.env.JWT_SECRET);
+    const jwtSecret = process.env.JWT_SECRET;
+
+    if (!jwtSecret) {
+      throw new Error(
+        "JWT_SECRET environment variable is required for JWT token generation."
+      );
+    }
+
+    console.log("JWT SECRET: [REDACTED]");
 
     const token = jwt.sign(
       { id: admin._id },
-      process.env.JWT_SECRET,
+      jwtSecret,
       { expiresIn: "15m" }
     );
 

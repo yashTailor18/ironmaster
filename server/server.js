@@ -11,6 +11,24 @@ const adminRoutes = require("./routes/adminRoutes");
 
 require("dotenv").config();
 
+const requiredEnvs = [
+  "MONGO_URI",
+  "JWT_SECRET",
+  "EMAIL_USER",
+  "EMAIL_PASS",
+];
+
+const missingEnvs = requiredEnvs.filter(
+  (name) => !process.env[name]
+);
+
+if (missingEnvs.length > 0) {
+  console.error(
+    `Missing required environment variables: ${missingEnvs.join(", ")}`
+  );
+  process.exit(1);
+}
+
 const app = express();
 
 // MIDDLEWARE

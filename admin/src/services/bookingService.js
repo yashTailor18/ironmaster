@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/bookings";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://ironmaster-7qg4.vercel.app";
+const API_URL = `${BASE_URL}/api/bookings`;
 
 export const getAllBookings = async () => {
   const response = await axios.get(`${API_URL}/all`);
@@ -24,7 +25,7 @@ export const assignDriver = async (
 ) => {
 
   const response = await axios.put(
-    `http://localhost:5000/api/bookings/assign-driver/${id}`,
+    `${BASE_URL}/api/bookings/assign-driver/${id}`,
     driverData
   );
 
