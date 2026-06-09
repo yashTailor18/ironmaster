@@ -5,6 +5,9 @@ const cors = require("cors");
 const dashboardRoutes = require(
   "./routes/dashboardRoutes"
 );
+const exportRoutes = require(
+  "./routes/exportRoutes"
+);
 
 const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -21,6 +24,7 @@ const requiredEnvs = [
 const missingEnvs = requiredEnvs.filter(
   (name) => !process.env[name]
 );
+
 
 if (missingEnvs.length > 0) {
   console.error(
@@ -41,6 +45,10 @@ app.use("/api/admin", adminRoutes);
 app.use(
   "/api/dashboard",
   dashboardRoutes
+);
+app.use(
+  "/api/export",
+  exportRoutes
 );
 app.use("/api/drivers", driverRoutes);
 // TEST ROUTE

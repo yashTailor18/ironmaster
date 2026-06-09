@@ -62,6 +62,20 @@ const bookingSchema = new mongoose.Schema(
   ref: "Driver",
   default: null,
 },
+paymentStatus: {
+  type: String,
+  default: "Pending",
+},
+
+amount: {
+  type: Number,
+  default: 0,
+},
+
+paymentMethod: {
+  type: String,
+  default: "",
+},
   },
 
   {
